@@ -77,22 +77,21 @@ function createHandler(ttl, fetchFunc) {
                         }
                         // check if exists in cache already
                         if (cacheMap.has(id)) {
-                            console.log("going to cache");
+                            console.log("Reading data from cache");
                             if (isCacheValid(ttl, cacheMap.get(id))) {
                                 // return data from cache
                                 sendResponse(Number((_b = cacheMap.get(id)) === null || _b === void 0 ? void 0 : _b.statusCode), JSON.stringify((_c = cacheMap.get(id)) === null || _c === void 0 ? void 0 : _c.data), res);
                                 return [2 /*return*/];
                             }
                             else {
-                                console.log("deleting invalid cache");
+                                console.log("Deleting invalid cache");
                                 cacheMap["delete"](id);
                             }
                         }
-                        // get result from fetchFunc
-                        console.log("calling api");
                         _e.label = 1;
                     case 1:
                         _e.trys.push([1, 3, , 4]);
+                        console.log("Calling api");
                         return [4 /*yield*/, fetchFunc(id)];
                     case 2:
                         apiResult = _e.sent();

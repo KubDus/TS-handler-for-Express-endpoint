@@ -54,7 +54,7 @@ export default function createHandler(
 
     // check if exists in cache already
     if (cacheMap.has(id)) {
-      console.log("going to cache");
+      console.log("Reading data from cache");
       if (isCacheValid(ttl, cacheMap.get(id))) {
         // return data from cache
         sendResponse(
@@ -64,14 +64,14 @@ export default function createHandler(
         );
         return;
       } else {
-        console.log("deleting invalid cache");
+        console.log("Deleting invalid cache");
         cacheMap.delete(id);
       }
     }
 
-    // get result from fetchFunc
-    console.log("calling api");
+    // get result from fetchFunc    
     try {
+      console.log("Calling api");
       const apiResult = await fetchFunc(id);
 
       // get only entries with price above avg price
