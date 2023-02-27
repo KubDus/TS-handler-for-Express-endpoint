@@ -65,7 +65,7 @@ function createHandler(ttl, fetchFunc) {
     return function (req, res) {
         var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
-            var id, apiResult, resultsAboveAvgPrice, newCache, timesWithHighestGap, lowTime, highTime, newCache, error_1;
+            var id, apiResult, resultsAboveAvgPrice, timesWithHighestGap, lowTime, highTime, newCache, error_1;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -98,12 +98,12 @@ function createHandler(ttl, fetchFunc) {
                         resultsAboveAvgPrice = processRawData(apiResult);
                         // return if there are no data left after filtering (all items with same price -> nothing is above average)
                         if (resultsAboveAvgPrice.length === 0) {
-                            newCache = {
-                                data: __assign({}, okStatusNoRange),
-                                created: new Date(),
-                                statusCode: 200
-                            };
-                            cacheMap.set(id, newCache);
+                            // const newCache: CacheItem = {
+                            //   data: { ...okStatusNoRange },
+                            //   created: new Date(),
+                            //   statusCode: 200,
+                            // };
+                            cacheMap.set(id, buildCacheOkStatusNoRange());
                             sendResponse(200, JSON.stringify((_d = cacheMap.get(id)) === null || _d === void 0 ? void 0 : _d.data), res);
                             return [2 /*return*/];
                         }
@@ -113,6 +113,12 @@ function createHandler(ttl, fetchFunc) {
                             highTime = timesWithHighestGap.highTime;
                             // if lowest and highest times are the same, then no range, otherwise send result
                             if (lowTime === highTime) {
+                                // const newCache: CacheItem = {
+                                //   data: { ...okStatusNoRange },
+                                //   created: new Date(),
+                                //   statusCode: 200,
+                                // };
+                                cacheMap.set(id, buildCacheOkStatusNoRange());
                                 sendResponse(200, JSON.stringify(okStatusNoRange), res);
                                 return [2 /*return*/];
                             }
@@ -190,4 +196,12 @@ function isCacheValid(miliSeconds, item) {
         return true;
     }
     return false;
+}
+function buildCacheOkStatusNoRange() {
+    var newCache = {
+        data: __assign({}, okStatusNoRange),
+        created: new Date(),
+        statusCode: 200
+    };
+    return newCache;
 }
