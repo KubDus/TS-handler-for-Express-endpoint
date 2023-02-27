@@ -158,17 +158,16 @@ function sendResponse(statusCode, data, res) {
     res.end();
 }
 function getTimesWithHighestGap(resultsAboveAvg) {
-    var sortedByDate = resultsAboveAvg.sort(function (a, b) { return a.time.getTime() - b.time.getTime(); });
+    resultsAboveAvg.sort(function (a, b) { return a.time.getTime() - b.time.getTime(); });
     var maxDiff = 0;
-    var firstTime = sortedByDate[0].time;
-    var highTime = sortedByDate[0].time;
-    console.log(sortedByDate);
-    for (var i = 1; i < sortedByDate.length; i++) {
-        var diff = sortedByDate[i].time.getTime() - sortedByDate[i - 1].time.getTime();
+    var firstTime = resultsAboveAvg[0].time;
+    var highTime = resultsAboveAvg[0].time;
+    for (var i = 1; i < resultsAboveAvg.length; i++) {
+        var diff = resultsAboveAvg[i].time.getTime() - resultsAboveAvg[i - 1].time.getTime();
         if (diff > maxDiff) {
             maxDiff = diff;
-            firstTime = sortedByDate[i - 1].time;
-            highTime = sortedByDate[i].time;
+            firstTime = resultsAboveAvg[i - 1].time;
+            highTime = resultsAboveAvg[i].time;
         }
     }
     return {
