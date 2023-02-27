@@ -141,6 +141,9 @@ function getTimesWithHighestGap(resultsAboveAvg: FetchResult) {
   let firstTime: Date = sortedByDate[0].time;
   let highTime: Date = sortedByDate[0].time;
 
+  console.log(sortedByDate);
+  
+
   for (let i = 1; i < sortedByDate.length; i++) {
     const diff =
     sortedByDate[i].time.getTime() - sortedByDate[i - 1].time.getTime();

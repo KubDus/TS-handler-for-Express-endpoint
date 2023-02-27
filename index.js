@@ -162,6 +162,7 @@ function getTimesWithHighestGap(resultsAboveAvg) {
     var maxDiff = 0;
     var firstTime = sortedByDate[0].time;
     var highTime = sortedByDate[0].time;
+    console.log(sortedByDate);
     for (var i = 1; i < sortedByDate.length; i++) {
         var diff = sortedByDate[i].time.getTime() - sortedByDate[i - 1].time.getTime();
         if (diff > maxDiff) {
