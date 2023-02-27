@@ -136,18 +136,18 @@ function sendResponse(statusCode: number, data: String, res: ServerResponse) {
 }
 
 function getTimesWithHighestGap(resultsAboveAvg: FetchResult) {
-  resultsAboveAvg.sort((a, b) => a.time.getTime() - b.time.getTime());
+  const sortedByDate = resultsAboveAvg.sort((a, b) => a.time.getTime() - b.time.getTime());
   let maxDiff = 0;
-  let firstTime: Date = resultsAboveAvg[0].time;
-  let highTime: Date = resultsAboveAvg[0].time;
+  let firstTime: Date = sortedByDate[0].time;
+  let highTime: Date = sortedByDate[0].time;
 
-  for (let i = 1; i < resultsAboveAvg.length; i++) {
+  for (let i = 1; i < sortedByDate.length; i++) {
     const diff =
-      resultsAboveAvg[i].time.getTime() - resultsAboveAvg[i - 1].time.getTime();
+    sortedByDate[i].time.getTime() - sortedByDate[i - 1].time.getTime();
     if (diff > maxDiff) {
       maxDiff = diff;
-      firstTime = resultsAboveAvg[i - 1].time;
-      highTime = resultsAboveAvg[i].time;
+      firstTime = sortedByDate[i - 1].time;
+      highTime = sortedByDate[i].time;
     }
   }
 
