@@ -1,3 +1,9 @@
+#### This repo can be used for testing the handler:
+
+#### https://github.com/KubDus/Server-only-for-TS-handler
+
+## Description of the task:
+
 ## Overview
 
 #### Create a package that provides handler function for Express.js endpoint. Retrieve the relevant
