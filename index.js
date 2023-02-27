@@ -166,24 +166,14 @@ function getTimesWithHighestGap(resultsAboveAvg) {
         var diff = resultsAboveAvg[i].time.getTime() - resultsAboveAvg[i - 1].time.getTime();
         if (diff > maxDiff) {
             maxDiff = diff;
-            firstTime = resultsAboveAvg[i].time;
-            highTime = resultsAboveAvg[i - 1].time;
+            firstTime = resultsAboveAvg[i - 1].time;
+            highTime = resultsAboveAvg[i].time;
         }
     }
     return {
         lowTime: firstTime,
         highTime: highTime
     };
-    // let lowestTime = resultsAboveAvg[0].time;
-    // let highestTime = resultsAboveAvg[0].time;
-    // for (let i = 1; i < resultsAboveAvg.length; i++) {
-    //   if (resultsAboveAvg[i].time.getTime() < lowestTime.getTime()) {
-    //     lowestTime = resultsAboveAvg[i].time;
-    //   }
-    //   if (resultsAboveAvg[i].time.getTime() > highestTime.getTime()) {
-    //     highestTime = resultsAboveAvg[i].time;
-    //   }
-    // }
 }
 function processRawData(apiResult) {
     //get avg price
