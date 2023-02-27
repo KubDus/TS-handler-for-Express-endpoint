@@ -69,7 +69,7 @@ export default function createHandler(
       }
     }
 
-    // get result from fetchFunc    
+    // get result from fetchFunc
     try {
       console.log("Calling api");
       const apiResult = await fetchFunc(id);
@@ -89,17 +89,18 @@ export default function createHandler(
         return;
       } else {
         // get lowest and highest times for resultRange
-        const highLowTimes = getHighLowTimes(resultsAboveAvgPrice);
-        const lowestTime = highLowTimes.lowestTime;
-        const highestTime = highLowTimes.highestTimeL;
+        const timesWithHighestGap =
+          getTimesWithHighestGap(resultsAboveAvgPrice);
+        const firstTime = timesWithHighestGap.lowTime;
+        const highTime = timesWithHighestGap.highTime;
 
         // if lowest and highest times are the same, then no range, otherwise send result
-        if (lowestTime === highestTime) {
+        if (firstTime === highTime) {
           sendResponse(200, JSON.stringify(okStatusNoRange), res);
           return;
         } else {
           const newCache: CacheItem = {
-            data: buildOkResponseWithRange(lowestTime, highestTime),
+            data: buildOkResponseWithRange(firstTime, highTime),
             created: new Date(),
             statusCode: 200,
           };
@@ -115,14 +116,14 @@ export default function createHandler(
   };
 }
 
-function buildOkResponseWithRange(lowestTime: Date, highestTime: Date) {
+function buildOkResponseWithRange(lowTime: Date, highTime: Date) {
   return {
     success: true,
     error: null,
     result: {
       range: {
-        start: lowestTime,
-        end: highestTime,
+        start: lowTime,
+        end: highTime,
       },
     },
   };
@@ -134,21 +135,37 @@ function sendResponse(statusCode: number, data: String, res: ServerResponse) {
   res.end();
 }
 
-function getHighLowTimes(resultsAboveAvg: FetchResult) {
-  let lowestTime = resultsAboveAvg[0].time;
-  let highestTime = resultsAboveAvg[0].time;
+function getTimesWithHighestGap(resultsAboveAvg: FetchResult) {
+  resultsAboveAvg.sort((a, b) => a.time.getTime() - b.time.getTime());
+  let maxDiff = 0;
+  let firstTime: Date = resultsAboveAvg[0].time;
+  let highTime: Date = resultsAboveAvg[0].time;
+
   for (let i = 1; i < resultsAboveAvg.length; i++) {
-    if (resultsAboveAvg[i].time.getTime() < lowestTime.getTime()) {
-      lowestTime = resultsAboveAvg[i].time;
-    }
-    if (resultsAboveAvg[i].time.getTime() > highestTime.getTime()) {
-      highestTime = resultsAboveAvg[i].time;
+    const diff =
+      resultsAboveAvg[i].time.getTime() - resultsAboveAvg[i - 1].time.getTime();
+    if (diff > maxDiff) {
+      maxDiff = diff;
+      firstTime = resultsAboveAvg[i].time;
+      highTime = resultsAboveAvg[i - 1].time;
     }
   }
+
   return {
-    lowestTime: lowestTime,
-    highestTimeL: highestTime,
+    lowTime: firstTime,
+    highTime: highTime,
   };
+
+  // let lowestTime = resultsAboveAvg[0].time;
+  // let highestTime = resultsAboveAvg[0].time;
+  // for (let i = 1; i < resultsAboveAvg.length; i++) {
+  //   if (resultsAboveAvg[i].time.getTime() < lowestTime.getTime()) {
+  //     lowestTime = resultsAboveAvg[i].time;
+  //   }
+  //   if (resultsAboveAvg[i].time.getTime() > highestTime.getTime()) {
+  //     highestTime = resultsAboveAvg[i].time;
+  //   }
+  // }
 }
 function processRawData(apiResult: FetchResult) {
   //get avg price
