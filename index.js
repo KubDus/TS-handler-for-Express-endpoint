@@ -98,11 +98,6 @@ function createHandler(ttl, fetchFunc) {
                         resultsAboveAvgPrice = processRawData(apiResult);
                         // return if there are no data left after filtering (all items with same price -> nothing is above average)
                         if (resultsAboveAvgPrice.length === 0) {
-                            // const newCache: CacheItem = {
-                            //   data: { ...okStatusNoRange },
-                            //   created: new Date(),
-                            //   statusCode: 200,
-                            // };
                             cacheMap.set(id, buildCacheOkStatusNoRange());
                             sendResponse(200, JSON.stringify((_d = cacheMap.get(id)) === null || _d === void 0 ? void 0 : _d.data), res);
                             return [2 /*return*/];
@@ -113,11 +108,6 @@ function createHandler(ttl, fetchFunc) {
                             highTime = timesWithHighestGap.highTime;
                             // if lowest and highest times are the same, then no range, otherwise send result
                             if (lowTime === highTime) {
-                                // const newCache: CacheItem = {
-                                //   data: { ...okStatusNoRange },
-                                //   created: new Date(),
-                                //   statusCode: 200,
-                                // };
                                 cacheMap.set(id, buildCacheOkStatusNoRange());
                                 sendResponse(200, JSON.stringify(okStatusNoRange), res);
                                 return [2 /*return*/];

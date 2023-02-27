@@ -79,11 +79,6 @@ export default function createHandler(
 
       // return if there are no data left after filtering (all items with same price -> nothing is above average)
       if (resultsAboveAvgPrice.length === 0) {
-        // const newCache: CacheItem = {
-        //   data: { ...okStatusNoRange },
-        //   created: new Date(),
-        //   statusCode: 200,
-        // };
         cacheMap.set(id, buildCacheOkStatusNoRange());
         sendResponse(200, JSON.stringify(cacheMap.get(id)?.data), res);
         return;
@@ -96,11 +91,6 @@ export default function createHandler(
 
         // if lowest and highest times are the same, then no range, otherwise send result
         if (lowTime === highTime) {
-          // const newCache: CacheItem = {
-          //   data: { ...okStatusNoRange },
-          //   created: new Date(),
-          //   statusCode: 200,
-          // };
           cacheMap.set(id, buildCacheOkStatusNoRange());
           sendResponse(200, JSON.stringify(okStatusNoRange), res);
           return;
