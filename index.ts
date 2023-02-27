@@ -88,19 +88,19 @@ export default function createHandler(
         sendResponse(200, JSON.stringify(cacheMap.get(id)?.data), res);
         return;
       } else {
-        // get lowest and highest times for resultRange
+        // get low and high times for resultRange
         const timesWithHighestGap =
           getTimesWithHighestGap(resultsAboveAvgPrice);
-        const firstTime = timesWithHighestGap.lowTime;
+        const lowTime = timesWithHighestGap.lowTime;
         const highTime = timesWithHighestGap.highTime;
 
         // if lowest and highest times are the same, then no range, otherwise send result
-        if (firstTime === highTime) {
+        if (lowTime === highTime) {
           sendResponse(200, JSON.stringify(okStatusNoRange), res);
           return;
         } else {
           const newCache: CacheItem = {
-            data: buildOkResponseWithRange(firstTime, highTime),
+            data: buildOkResponseWithRange(lowTime, highTime),
             created: new Date(),
             statusCode: 200,
           };
@@ -138,7 +138,7 @@ function sendResponse(statusCode: number, data: String, res: ServerResponse) {
 function getTimesWithHighestGap(resultsAboveAvg: FetchResult) {
   resultsAboveAvg.sort((a, b) => a.time.getTime() - b.time.getTime());
   let maxDiff = 0;
-  let firstTime: Date = resultsAboveAvg[0].time;
+  let lowTime: Date = resultsAboveAvg[0].time;
   let highTime: Date = resultsAboveAvg[0].time;
 
   for (let i = 1; i < resultsAboveAvg.length; i++) {
@@ -146,13 +146,13 @@ function getTimesWithHighestGap(resultsAboveAvg: FetchResult) {
       resultsAboveAvg[i].time.getTime() - resultsAboveAvg[i - 1].time.getTime();
     if (diff > maxDiff) {
       maxDiff = diff;
-      firstTime = resultsAboveAvg[i - 1].time;
+      lowTime = resultsAboveAvg[i - 1].time;
       highTime = resultsAboveAvg[i].time;
     }
   }
 
   return {
-    lowTime: firstTime,
+    lowTime: lowTime,
     highTime: highTime,
   };
 }

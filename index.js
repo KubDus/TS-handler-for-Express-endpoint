@@ -65,7 +65,7 @@ function createHandler(ttl, fetchFunc) {
     return function (req, res) {
         var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
-            var id, apiResult, resultsAboveAvgPrice, newCache, timesWithHighestGap, firstTime, highTime, newCache, error_1;
+            var id, apiResult, resultsAboveAvgPrice, newCache, timesWithHighestGap, lowTime, highTime, newCache, error_1;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -109,16 +109,16 @@ function createHandler(ttl, fetchFunc) {
                         }
                         else {
                             timesWithHighestGap = getTimesWithHighestGap(resultsAboveAvgPrice);
-                            firstTime = timesWithHighestGap.lowTime;
+                            lowTime = timesWithHighestGap.lowTime;
                             highTime = timesWithHighestGap.highTime;
                             // if lowest and highest times are the same, then no range, otherwise send result
-                            if (firstTime === highTime) {
+                            if (lowTime === highTime) {
                                 sendResponse(200, JSON.stringify(okStatusNoRange), res);
                                 return [2 /*return*/];
                             }
                             else {
                                 newCache = {
-                                    data: buildOkResponseWithRange(firstTime, highTime),
+                                    data: buildOkResponseWithRange(lowTime, highTime),
                                     created: new Date(),
                                     statusCode: 200
                                 };
@@ -160,18 +160,18 @@ function sendResponse(statusCode, data, res) {
 function getTimesWithHighestGap(resultsAboveAvg) {
     resultsAboveAvg.sort(function (a, b) { return a.time.getTime() - b.time.getTime(); });
     var maxDiff = 0;
-    var firstTime = resultsAboveAvg[0].time;
+    var lowTime = resultsAboveAvg[0].time;
     var highTime = resultsAboveAvg[0].time;
     for (var i = 1; i < resultsAboveAvg.length; i++) {
         var diff = resultsAboveAvg[i].time.getTime() - resultsAboveAvg[i - 1].time.getTime();
         if (diff > maxDiff) {
             maxDiff = diff;
-            firstTime = resultsAboveAvg[i - 1].time;
+            lowTime = resultsAboveAvg[i - 1].time;
             highTime = resultsAboveAvg[i].time;
         }
     }
     return {
-        lowTime: firstTime,
+        lowTime: lowTime,
         highTime: highTime
     };
 }
